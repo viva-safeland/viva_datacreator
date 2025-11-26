@@ -1,0 +1,1096 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A comprehensive tool for creating semantic segmentation datasets from videos using SAM2.">
+      
+      
+        <meta name="author" content="ViVa-SAFELAND Team">
+      
+      
+        <link rel="canonical" href="https://viva-safeland.github.io/viva_datacreator/usage/">
+      
+      
+        <link rel="prev" href="../installation/">
+      
+      
+        <link rel="next" href="../cli-reference/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Usage - ViVa-DataCreator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#usage-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="ViVa-DataCreator" class="md-header__button md-logo" aria-label="ViVa-DataCreator" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ViVa-DataCreator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Usage
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/viva-safeland/viva_datacreator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    viva-safeland/viva_datacreator
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Usage
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cli-reference/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  CLI Reference
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="ViVa-DataCreator" class="md-nav__button md-logo" aria-label="ViVa-DataCreator" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    ViVa-DataCreator
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/viva-safeland/viva_datacreator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    viva-safeland/viva_datacreator
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graphical-user-interface-gui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graphical User Interface (GUI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-gui-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key GUI Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workflow-detailed-explanation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow: Detailed Explanation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workflow: Detailed Explanation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-frame-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Frame Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-initial-interactive-segmentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Initial Interactive Segmentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-mask-propagation-automatic-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Mask Propagation (Automatic Tracking)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-detection-and-tracking-with-yolo-and-deepsort" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Detection and Tracking with YOLO and DeepSort
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-interactive-mask-refinement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Interactive Mask Refinement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-propagation-of-refined-masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Propagation of Refined Masks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-creation-of-semantic-color-masks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Creation of Semantic Color Masks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-8-final-dataset-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Final Dataset Composition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="usage-guide">Usage Guide</h1>
+<p>This guide will walk you through a basic example of how to use ViVa-SAFELAND.</p>
+<p>First, make sure you have the <a href="../installation/">necessary dependencies installed</a>. Then, you can run the application directly from your terminal</p>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="graphical-user-interface-gui">Graphical User Interface (GUI)</h3>
+<p>The primary way to use ViVa-SAFELAND is through its intuitive graphical user interface. Start it with:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>viva-creator
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Automatic Setup</p>
+<p>The application will automatically download the required SAM2 checkpoints on first launch if they are not already available. Checkpoints are saved to a checkpoints/ directory that is automatically created at the root of the project.</p>
+</div>
+<p>Example output when starting the GUI for the first time:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>viva-creator
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Using<span class="w"> </span>CPython<span class="w"> </span><span class="m">3</span>.12.3<span class="w"> </span>interpreter<span class="w"> </span>at:<span class="w"> </span>/usr/bin/python3.12
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Creating<span class="w"> </span>virtual<span class="w"> </span>environment<span class="w"> </span>at:<span class="w"> </span>.venv
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Installed<span class="w"> </span><span class="m">91</span><span class="w"> </span>packages<span class="w"> </span><span class="k">in</span><span class="w"> </span>468ms
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Forest-dark<span class="w"> </span>theme<span class="w"> </span>loaded<span class="w"> </span>successfully
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Optimized<span class="w"> </span>defaults<span class="w"> </span>loaded
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>SAM2<span class="w"> </span>checkpoints<span class="w"> </span>not<span class="w"> </span>found.<span class="w"> </span>Downloading...
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Downloading<span class="w"> </span>sam2.1_hiera_tiny.pt<span class="w"> </span>to<span class="w"> </span>Dataset_Creator/checkpoints/sam2.1_hiera_tiny.pt...
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>sam2.1_hiera_tiny.pt:<span class="w"> </span>149MB<span class="w"> </span><span class="o">[</span><span class="m">00</span>:17,<span class="w"> </span><span class="m">9</span>.12MB/s<span class="o">]</span><span class="w">                                                                              </span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Finished<span class="w"> </span>downloading<span class="w"> </span>sam2.1_hiera_tiny.pt.
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Downloading<span class="w"> </span>sam2.1_hiera_small.pt<span class="w"> </span>to<span class="w"> </span>Dataset_Creator/checkpoints/sam2.1_hiera_small.pt...
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>sam2.1_hiera_small.pt:<span class="w"> </span>176MB<span class="w"> </span><span class="o">[</span><span class="m">00</span>:20,<span class="w"> </span><span class="m">8</span>.97MB/s<span class="o">]</span><span class="w">                                                                             </span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>Finished<span class="w"> </span>downloading<span class="w"> </span>sam2.1_hiera_small.pt.
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Downloading<span class="w"> </span>sam2.1_hiera_base_plus.pt<span class="w"> </span>to<span class="w"> </span>Dataset_Creator/checkpoints/sam2.1_hiera_base_plus.pt...
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>sam2.1_hiera_base_plus.pt:<span class="w"> </span>309MB<span class="w"> </span><span class="o">[</span><span class="m">00</span>:39,<span class="w"> </span><span class="m">8</span>.18MB/s<span class="o">]</span><span class="w">                                                                         </span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Finished<span class="w"> </span>downloading<span class="w"> </span>sam2.1_hiera_base_plus.pt.
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>Downloading<span class="w"> </span>sam2.1_hiera_large.pt<span class="w"> </span>to<span class="w"> </span>Dataset_Creator/checkpoints/sam2.1_hiera_large.pt...
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>sam2.1_hiera_large.pt:<span class="w"> </span>856MB<span class="w"> </span><span class="o">[</span><span class="m">01</span>:36,<span class="w"> </span><span class="m">9</span>.33MB/s<span class="o">]</span><span class="w">                                                                             </span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Finished<span class="w"> </span>downloading<span class="w"> </span>sam2.1_hiera_large.pt.
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Device<span class="w"> </span>information:<span class="w"> </span>GPU:<span class="w"> </span>NVIDIA<span class="w"> </span>GeForce<span class="w"> </span>RTX<span class="w"> </span><span class="m">3060</span><span class="w"> </span><span class="o">(</span><span class="m">11</span>.6<span class="w"> </span>GB<span class="o">)</span>
+</span></code></pre></div></p>
+<figure>
+    <figcaption>ViVa-DataCreator: Graphical User Interface for Dataset Creation</figcaption>
+    <img _="," alt="GUI" loading="lazy" src="../assets/gui_screenshot.png" title="Image Caption" width="800" />
+</figure>
+<p>The GUI provides:</p>
+<ul>
+<li><strong>Process Selection Panel:</strong> Choose which step of the 8-step pipeline to execute</li>
+<li><strong>Configuration Panel:</strong> Set all necessary parameters including video selection, SAM2 model configuration, and processing parameters</li>
+<li><strong>Real-time Monitoring:</strong> View progress and status messages as processes run</li>
+<li><strong>Automatic Configuration Saving:</strong> Your settings are saved and restored between sessions</li>
+</ul>
+<h3 id="key-gui-features">Key GUI Features</h3>
+<ul>
+<li><strong>Video Selection:</strong> Browse and select your input video file</li>
+<li><strong>Model Selection:</strong> Choose from available SAM2 models (checkpoints are downloaded automatically)</li>
+<li><strong>Parameter Configuration:</strong><ul>
+<li>Factor: Image scaling factor for processing efficiency</li>
+<li>Num Images: Batch size for frame processing</li>
+<li>Num Objects: Objects to process simultaneously</li>
+<li>SAHI Settings: Parameters for enhanced small object detection</li>
+</ul>
+</li>
+<li><strong>Status Monitoring:</strong> Live updates on processing progress and device information</li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<p>The application automatically saves configuration to 'config.yaml', including:</p>
+<ul>
+<li>Video path</li>
+<li>SAM2 checkpoint path</li>
+<li>Model configuration path</li>
+<li>Processing parameters (factor, num_images, num_objects, etc.)</li>
+</ul>
+<p>This configuration is automatically loaded on subsequent runs.</p>
+<h2 id="workflow-detailed-explanation">Workflow: Detailed Explanation</h2>
+<p>The dataset creation process is divided into 8 steps that should be executed in order through the GUI.</p>
+<hr />
+<h3 id="step-1-frame-extraction">Step 1: Frame Extraction</h3>
+<ul>
+<li><strong>Script:</strong> <code>first_step.py</code></li>
+<li><strong>Purpose:</strong> Prepares the base material for the entire process. It extracts each frame from the video, aligns it with the previous frame to correct for small camera vibrations, and saves it as an image.</li>
+<li><strong>Inputs:</strong><ul>
+<li>The video file selected in the GUI (<code>--root</code>).</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>imgsA/</code> folder</strong>: Contains all the frames from the video as individual images (e.g., <code>00001.jpg</code>, <code>00002.jpg</code>, etc.).</li>
+<li><strong><code>video_alineado.mp4</code> file</strong>: A new video created from the aligned frames. This video will be used in subsequent steps.</li>
+<li><strong><code>static.png</code> file</strong>: The first frame of the video, saved as a static background image for use in later steps.</li>
+</ul>
+</li>
+</ul>
+<figure>
+    <figcaption>Step 1: Left - Original Video, Right - Aligned Video</figcaption>
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/original.gif" width="400" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/step_1.gif" width="400" />
+</figure>
+<hr />
+<h3 id="step-2-initial-interactive-segmentation">Step 2: Initial Interactive Segmentation</h3>
+<ul>
+<li><strong>Script:</strong> <code>second_step.py</code></li>
+<li><strong>Purpose:</strong> In this step, you "teach" the model which objects you are interested in on the first frame of the video. This initial information is crucial for the model to be able to track these objects later.</li>
+<li><strong>How it works:</strong><ol>
+<li>A window will open showing the first frame of the video (resized according to the <code>Factor</code>).</li>
+<li>Click on the objects you want to segment. You will be prompted to enter <code>1</code> (positive click, to add this part to the object) or <code>0</code> (negative click, to exclude it).</li>
+<li>The SAM2 model will display the segmentation mask it is generating in real-time. You can add more points to refine it.</li>
+</ol>
+</li>
+<li><strong>Controls:</strong><ul>
+<li><strong>Mouse Click:</strong> Adds a reference point (positive or negative).</li>
+<li><strong><code>a</code> key (Add):</strong> When you are satisfied with the mask for an object, press <code>a</code>. A menu will open for you to select the object's class (e.g., "car", "person"). After selecting, you can start segmenting a new object.</li>
+<li><strong><code>ESC</code> key (Escape):</strong> When you have finished segmenting all objects of interest in the frame, press <code>ESC</code>. You will be asked for the class of the last object, and the process will end.</li>
+</ul>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li>The first frame from the <code>imgsA/</code> folder.</li>
+<li>Your interaction (clicks and class assignments).</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>mask_prompts.csv</code> file</strong>: A CSV file that saves the information for each object you segmented: the reference points, the labels (positive/negative), and the assigned class.</li>
+</ul>
+</li>
+</ul>
+<figure>
+    <figcaption>Step 2: Left - Aligned Video, Right - Clicks and Masks (on cars)</figcaption>
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/step_2_0.png" width="400" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/step_2_1.png" width="400" />
+</figure>
+<hr />
+<h3 id="step-3-mask-propagation-automatic-tracking">Step 3: Mask Propagation (Automatic Tracking)</h3>
+<ul>
+<li><strong>Script:</strong> <code>third_step.py</code></li>
+<li><strong>Purpose:</strong> Using the information from <code>mask_prompts.csv</code>, this script processes the video in batches (<code>--n_imgs</code>) and propagates the initial masks through the frames, "tracking" the objects.</li>
+<li><strong>How it works:</strong><ol>
+<li>Loads the prompts from <code>mask_prompts.csv</code>.</li>
+<li>For the first batch of images, it creates the initial masks.</li>
+<li>For subsequent batches, it uses the mask from the last frame of the previous batch as the starting point for the current batch.</li>
+<li>Saves each generated mask as an individual image.</li>
+</ol>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li><code>mask_prompts.csv</code>.</li>
+<li>Images from the <code>imgsA/</code> folder.</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>masks/</code> folder</strong>: Gets filled with thousands of mask images. Each file is named like <code>outmask_fr&lt;FRAME_NUM&gt;_id&lt;OBJECT_ID&gt;_cl&lt;CLASS&gt;.png</code>.</li>
+<li><strong><code>segmentation/</code> folder</strong>: Contains images where all masks for a single frame are grouped into one image. The filename is the frame number (e.g., <code>1.png</code>, <code>2.png</code>).</li>
+</ul>
+</li>
+</ul>
+<figure>
+    <figcaption>Step 3: Left - Objects Selected, Right - Individual Masks (cars)</figcaption>
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/step_2_1.png" width="300" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/combined_outmask.png" width="300" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/segmentation_0.png" width="300" />
+</figure>
+<hr />
+<h3 id="step-4-detection-and-tracking-with-yolo-and-deepsort">Step 4: Detection and Tracking with YOLO and DeepSort</h3>
+<ul>
+<li><strong>Script:</strong> <code>fourth_step.py</code></li>
+<li><strong>Purpose:</strong> This step temporarily ignores the SAM2 masks and performs object detection from scratch using a pre-trained YOLO model and the DeepSort tracker. The goal is to identify the most "prominent" or consistently moving objects, in order to refine their masks in the next step.</li>
+<li><strong>How it works:</strong><ol>
+<li>Processes the <code>video_alineado.mp4</code> frame by frame.</li>
+<li>In each frame, it applies an inverse mask (using masks from the <code>segmentation/</code> folder) to hide already segmented areas and avoid duplicate detections.</li>
+<li>Uses SAHI to improve the detection of small objects with YOLO.</li>
+<li>Uses DeepSort to assign a unique tracking ID to each detected object throughout the video.</li>
+</ol>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li><code>video_alineado.mp4</code>.</li>
+<li>Masks from the <code>segmentation/</code> folder.</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>track_dic.csv</code> file</strong>: A CSV containing the <code>track_id</code> of each detected object and the first frame in which it appeared, along with its bounding box.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="step-5-interactive-mask-refinement">Step 5: Interactive Mask Refinement</h3>
+<ul>
+<li><strong>Script:</strong> <code>fifth_step.py</code></li>
+<li><strong>Purpose:</strong> To review the objects detected in Step 4 and create high-quality masks for them using SAM2 interactively. This is useful for adding objects that the tracking in Step 3 might have missed.</li>
+<li><strong>How it works:</strong><ol>
+<li>Reads the <code>track_dic.csv</code> file.</li>
+<li>For each object in the CSV, it shows you a crop (the bounding box) of the object.</li>
+<li>Just like in Step 2, you can use positive and negative clicks to generate a precise mask for that object.</li>
+</ol>
+</li>
+<li><strong>Controls:</strong><ul>
+<li><strong>Mouse Click:</strong> Adds a reference point.</li>
+<li><strong><code>a</code> key (Accept):</strong> Finishes adding points, prompts you to assign a class, and saves the mask.</li>
+<li><strong><code>0</code> key (Skip):</strong> Skips the current object without generating a mask.</li>
+<li><strong><code>ESC</code> key (Escape):</strong> Ends the entire Step 5 process.</li>
+</ul>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li><code>track_dic.csv</code>.</li>
+<li>Images from the <code>imgsA/</code> folder.</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>traked/</code> folder</strong>: Saves the new, interactively generated masks.</li>
+<li><strong><code>mask_list.csv</code> file</strong>: A list of all masks generated in this step, with their frame, class, and ID.</li>
+</ul>
+</li>
+</ul>
+<figure>
+    <figcaption>Step 5: Interactive Mask Refinement</figcaption>
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/step_5.png" width="800" />
+</figure>
+<hr />
+<h3 id="step-6-propagation-of-refined-masks">Step 6: Propagation of Refined Masks</h3>
+<ul>
+<li><strong>Script:</strong> <code>sixth_step.py</code></li>
+<li><strong>Purpose:</strong> Similar to Step 3, but this time it uses the refined and additional masks created in Step 5 (<code>mask_list.csv</code>) and propagates them forward and backward through the video to complete the segmentation of those objects.</li>
+<li><strong>How it works:</strong><ol>
+<li>For each mask in <code>mask_list.csv</code>, it uses it as a starting point.</li>
+<li>It processes the video in batches (<code>--n_imgs</code>) forward from the mask's frame, generating and saving the segmentations.</li>
+<li>It then processes the video backward from the same frame to complete the segmentation in the preceding frames.</li>
+</ol>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li><code>mask_list.csv</code>.</li>
+<li>Images from the <code>imgsA/</code> folder.</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>masks/</code> folder</strong>: Adds and/or overwrites the masks of the refined objects, ensuring complete segmentation throughout the entire video.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="step-7-creation-of-semantic-color-masks">Step 7: Creation of Semantic Color Masks</h3>
+<ul>
+<li><strong>Script:</strong> <code>seventh_step.py</code></li>
+<li><strong>Purpose:</strong> To unify all generated masks into a single image per frame, where each object class has a unique color. This creates a visual representation of the semantic segmentation.</li>
+<li><strong>How it works:</strong><ol>
+<li>Reads the class colors from the <code>class_dict.csv</code> file.</li>
+<li>For each frame, it combines all corresponding masks from the <code>masks/</code> folder.</li>
+<li>It paints each mask with the color of its class.</li>
+</ol>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li>All masks in the <code>masks/</code> folder.</li>
+<li><code>class_dict.csv</code> for the colors.</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong><ul>
+<li><strong><code>semantic/</code> folder</strong>: Contains the semantic segmentation images, one for each frame, with objects colored according to their class.</li>
+</ul>
+</li>
+</ul>
+<figure>
+    <figcaption>Left - Individual Masks, Right - Combined Masks (cars)</figcaption>
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/combined_outmask.png" width="400" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/semantic_0.png" width="400" />
+</figure>
+<hr />
+<h3 id="step-8-final-dataset-composition">Step 8: Final Dataset Composition</h3>
+<ul>
+<li><strong>Script:</strong> <code>eighth_step.py</code></li>
+<li><strong>Purpose:</strong> To create the final dataset by combining the original images with the semantic segmentation masks.</li>
+<li><strong>How it works:</strong><ol>
+<li>Takes the first image of the video (<code>static.png</code>) as a background.</li>
+<li>For each image in the <code>semantic/</code> folder, it overlays the color masks onto the background image. The unsegmented (black) areas are replaced with the content from the static image.</li>
+</ol>
+</li>
+<li><strong>Inputs:</strong><ul>
+<li>Images from the <code>semantic/</code> folder.</li>
+<li>A static background image (the first frame of the video).</li>
+</ul>
+</li>
+<li><strong>Outputs:</strong>1<ul>
+<li><strong><code>dataset/</code> folder</strong>: The final dataset, with images showing the segmented and colored objects on a realistic background.</li>
+</ul>
+</li>
+</ul>
+<figure>
+    <figcaption>Step 8: Final Dataset Composition</figcaption>
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/reduced_00000_dataset.jpg" width="300" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/reduced_0.png" width="300" />
+    <img _="," align="left" alt="GUI" loading="lazy" src="../assets/reduced_0_dataset.png" width="300" />
+</figure>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../installation/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Installation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../cli-reference/" class="md-footer__link md-footer__link--next" aria-label="Next: CLI Reference">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                CLI Reference
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2025 ViVa-DataCreator
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/viva-safeland/viva_datacreator" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.footer", "content.code.copy", "search.suggest", "search.highlight", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
