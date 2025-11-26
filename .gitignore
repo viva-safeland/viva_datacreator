@@ -1,0 +1,9 @@
+segmented_creator.egg-info
+__pycache__
+yolo11x.pt
+.venv
+checkpoints
+sam2_source
+videodataset
+viva_safeland
+*.egg-info

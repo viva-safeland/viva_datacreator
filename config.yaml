@@ -1,0 +1,14 @@
+auto_tune: true
+confidence_threshold: 0.35
+device: auto
+fac: 3
+img_size_sahi: 512
+mask_cache: auto
+model_cfg: /home/juls/projects/viva_datacreator/.venv/lib/python3.12/site-packages/sam2/configs/sam2.1/sam2.1_hiera_l.yaml
+n_imgs: 200
+n_obj: 20
+overlap_sahi: 0.2
+ram_budget: 0.6
+root: /home/juls/projects/ViVa-DataCreator_Juls/videodataset/video.mp4
+sam2_chkpt: /home/juls/projects/viva_datacreator/checkpoints/sam2.1_hiera_large.pt
+yolo_weights: yolo11x.pt

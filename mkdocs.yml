@@ -1,0 +1,98 @@
+site_name: ViVa-DataCreator
+site_url: https://viva-safeland.github.io/viva_datacreator/
+site_author: ViVa-SAFELAND Team
+site_description: >-
+  A comprehensive tool for creating semantic segmentation datasets from videos using SAM2.
+
+# Repository
+repo_name: viva-safeland/viva_datacreator
+repo_url: https://github.com/viva-safeland/viva_datacreator
+
+# Copyright
+copyright: Copyright &copy; 2025 ViVa-DataCreator
+
+# Navigation
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - CLI Reference: cli-reference.md
+  - About: about.md
+
+# Theme
+theme:
+  name: material
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.footer
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+    - toc.follow
+    - toc.integrate
+
+  palette:
+      scheme: slate
+      primary: custom
+      accent: custom
+
+extra_css:
+  - extra.css
+
+# Extensions
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - admonition
+  - pymdownx.blocks.caption
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
+# Extra
+extra:
+  social:
+    - icon: simple/github
+      link: https://github.com/viva-safeland/viva_datacreator
+
+# Plugins
+plugins:
+  - search
+  - mkdocstrings:
+      enabled: !ENV [ENABLE_MKDOCSTRINGS, true]
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_if_no_docstring: false
+            group_by_category: true
+            allow_inspection: true
+            docstring_style: google
+            show_source: false
+            find_stubs_package: true
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: table
