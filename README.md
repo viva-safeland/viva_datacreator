@@ -43,10 +43,10 @@ For detailed usage instructions, examples, and API documentation, please refer t
 
 ## Citation
 
-If you use ViVa-SAFELAND in your research, please cite our work:
+If you use ViVa-DataCreator in your research, please cite our work:
 
 ```bibtex
-@software{soriano_garcia_viva_safeland_2025,
+@software{soriano_garcia_viva_datacreator_2025,
   author = {Miguel Soriano-García, Diego Mercado-Ravell, Israel Becerra and Julio De La Torre-Vanegas},
   title = {ViVa-DataCreator: Dataset Creation Tool},
   year = {2025},

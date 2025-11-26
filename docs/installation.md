@@ -43,7 +43,7 @@ Choose one of the following installation methods:
 
     ```bash
     git clone https://github.com/viva-safeland/viva_datacreator.git
-    cd viva-datacreator
+    cd viva_datacreator
     uv sync
     ```
 
