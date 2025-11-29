@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "viva-datacreator"
-version = "0.0.6"
+version = "0.0.5"
 description = "An open-source tool for creating image segmentation datasets from videos using SAM 2"
 readme = "README.md"
 authors = [
