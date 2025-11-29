@@ -178,6 +178,8 @@ import os
 import sys
 import subprocess
 import torch
+import webbrowser
+from PIL import Image, ImageTk
 
 
 class Tooltip:
@@ -259,8 +261,8 @@ class VideoApp:
         self.root = root
         self.root.title("ViVa-DataCreator")
         # --- CHANGE: Reduced window size for a more compact layout ---
-        self.root.geometry("1024x600")
-        self.root.minsize(900, 550)
+        self.root.geometry("1024x620")
+        self.root.minsize(1024, 620)
 
         # Configure fonts
         self.FONT = ("Arial", 10)
@@ -356,8 +358,40 @@ class VideoApp:
         main_container.columnconfigure(1, weight=1)    # Right column for everything else
 
         # 3. Create and place the two main panes
-        process_pane = ttk.Labelframe(main_container, text="Process Selection")
-        process_pane.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        # Left Panel Container
+        left_panel = ttk.Frame(main_container)
+        left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+
+        # Logo
+        try:
+            logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'docs', 'assets', 'logo.png')
+            if os.path.exists(logo_path):
+                # Open the image using PIL
+                pil_image = Image.open(logo_path)
+                
+                # Calculate new height to maintain aspect ratio with width 200
+                target_width = 200
+                width_percent = (target_width / float(pil_image.size[0]))
+                target_height = int((float(pil_image.size[1]) * float(width_percent)))
+                
+                # Resize image
+                resized_image = pil_image.resize((target_width, target_height), Image.Resampling.LANCZOS)
+                
+                # Convert to PhotoImage
+                self.logo_img = ImageTk.PhotoImage(resized_image)
+                
+                logo_label = ttk.Label(left_panel, image=self.logo_img)
+                logo_label.pack(anchor='center', pady=(0, 10))
+        except Exception as e:
+            print(f"Error loading logo: {e}")
+
+        process_pane = ttk.Labelframe(left_panel, text="Process Selection")
+        process_pane.pack(fill=tk.X, pady=(0, 10))
+
+        # Documentation Link
+        doc_link = ttk.Label(left_panel, text="Documentation", foreground="#4a90e2", cursor="hand2", font=("Arial", 10, "underline"))
+        doc_link.pack(anchor='center', pady=(0, 10))
+        doc_link.bind("<Button-1>", lambda e: self.open_documentation("https://viva-safeland.github.io/viva_datacreator"))
 
         controls_pane = ttk.Frame(main_container)
         controls_pane.grid(row=0, column=1, sticky="nsew")
@@ -380,6 +414,19 @@ class VideoApp:
         self.status_line_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 5))
         
         self.terminal_capture = TerminalCapture(self.status_line_label)
+
+    def open_documentation(self, url):
+        """Opens the documentation URL suppressing browser output on Linux."""
+        if sys.platform.startswith('linux'):
+            try:
+                subprocess.Popen(['xdg-open', url], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            except Exception as e:
+                print(f"Error opening documentation with xdg-open: {e}")
+                # Fallback to webbrowser if xdg-open fails
+                webbrowser.open(url)
+        else:
+            webbrowser.open(url)
+
 
     def create_process_selection_panel(self, parent):
         """Creates the left panel with only the process selection radio buttons."""

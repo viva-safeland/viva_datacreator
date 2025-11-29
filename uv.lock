@@ -1914,7 +1914,7 @@ wheels = [
 
 [[package]]
 name = "viva-datacreator"
-version = "0.0.2"
+version = "0.0.4"
 source = { editable = "." }
 dependencies = [
     { name = "deep-sort-realtime" },
