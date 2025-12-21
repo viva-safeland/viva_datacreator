@@ -1,6 +1,6 @@
 # Installation
 
-This guide provides instructions to install ViVa-SAFELAND.
+This guide provides instructions to install ViVa-DataCreator.
 
 !!! info "System Requirements"
     The code automatically creates a Python 3.12 virtual environment using `uv`, even if a different Python version is installed on your system. 
@@ -52,11 +52,10 @@ Choose one of the following installation methods:
 
 ## 4. Video Requirements
 
-To use ViVa-SAFELAND, you need video files for processing. The application accepts various video formats. Below the recommended specifications are listed:
+To use ViVa-DataCreator, you need video files for processing. The application accepts various video formats. Below the recommended specifications are listed:
 
 Video specifications:
 
-- **Format:** MP4, AVI, MOV, MKV, WMV, FLV, WebM
+- **Format:** MP4, AVI, MOV, MKV, WMV, MPEG, MPG, FLV, WebM, and other formats supported by the OpenCV library
 - **Resolution:** 1080p or higher recommended for better segmentation quality
-- **Frame Rate:** 30 FPS recommended
 - **Content:** Videos containing objects you want to segment (people, vehicles, animals, etc.)

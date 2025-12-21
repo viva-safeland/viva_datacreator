@@ -22,9 +22,9 @@ Step 3 - Automatic Mask Propagation:
     Uses the prompts from Step 2 to automatically segment objects
     throughout the video sequence using SAM2.
 
-Step 4 - Object Detection and Tracking:
+Step 4 - Discovering New Objects:
     Performs YOLO-based object detection with SAHI enhancement and
-    DeepSort tracking to complement SAM2 segmentation.
+    DeepSort tracking to identify new objects appearing mid-video.
 
 Step 5 - Interactive Mask Refinement:
     Provides interactive refinement of detected objects, allowing
@@ -39,8 +39,9 @@ Step 7 - Color-Based Semantic Segmentation:
     has a distinct color for visual clarity.
 
 Step 8 - Final Dataset Creation:
-    Creates the final semantic segmentation dataset ready for
-    training machine learning models.
+    Creates the final dataset by combining tracked objects with a
+    manually prepared background frame (`static.png`) from the
+    original stabilized video.
 
 GUI Features:
 -------------
@@ -117,16 +118,16 @@ Inputs: mask_prompts.csv, images from imgsA/ folder
 Outputs: masks/ folder (individual mask files), segmentation/ folder
 (grouped masks by frame)
 
-Step 4 - Detection and Tracking:
+Step 4 - Discovering New Objects:
 Script: fourth_step.py
-Purpose: Temporarily ignores SAM2 masks and performs object detection
-from scratch using YOLO and DeepSort to identify prominent objects for
-refinement.
+Purpose: Designed to find objects that appear mid-video and were not originally
+segmented in Step 2. It uses YOLO for detection and DeepSort for tracking to
+identify new objects of interest.
 How it works: Processes video_alineado.mp4 frame by frame, applies
-inverse masks to hide segmented areas, uses SAHI to improve small object
-detection, uses DeepSort for tracking IDs.
-Inputs: video_alineado.mp4, masks from segmentation/ folder
-Outputs: track_dic.csv file (track_id, frame number, bounding boxes)
+inverse masks to hide already segmented areas, uses SAHI to improve small object
+detection, uses DeepSort to assign unique tracking IDs to newly detected objects.
+Inputs: video_alineado.mp4, existing masks from segmentation/ folder
+Outputs: track_dic.csv file (discovered objects, discovery frame, bounding boxes)
 
 Step 5 - Interactive Mask Refinement:
 Script: fifth_step.py
@@ -162,12 +163,12 @@ Outputs: semantic/ folder (colored semantic segmentation images)
 
 Step 8 - Final Dataset Creation:
 Script: eighth_step.py
-Purpose: Creates final dataset by combining original images with
-semantic segmentation masks.
-How it works: Takes first video image (static.png) as background,
-overlays color masks from semantic/ folder, replaces unsegmented
-(black) areas with static background content.
-Inputs: Images from semantic/ folder, static background image
+Purpose: Creates the final dataset by combining tracked objects with a
+clean background base (`static.png`).
+How it works: Uses `static.png` as the background. This frame is typically
+a manually edited version of the first stabilized frame containing only
+the background. Tracked objects are then overlaid onto this base.
+Inputs: Images from semantic/ folder, static background image (static.png)
 Outputs: dataset/ folder (final ready-to-use dataset)
 """
 
@@ -625,11 +626,11 @@ class VideoApp:
             "first_step": "Prepares the base material for the entire process. Extracts each frame from the video, aligns it with the previous frame to correct for small camera vibrations, and saves it as an image. Outputs: imgsA/ folder with individual frames, video_alineado.mp4 file, static.png (first frame for background use).",
             "second_step": "Teaches the model which objects you are interested in on the first frame. Shows the first frame (resized according to Factor), allows clicking on objects with positive/negative points, SAM2 shows masks in real-time. Controls: Mouse click (adds points), 'a' key (accept object, assign class), 'ESC' key (finish). Outputs: mask_prompts.csv with reference points, labels, and classes.",
             "third_step": "Uses mask_prompts.csv to process video in batches and propagate initial masks through frames, tracking objects. Loads prompts, creates initial masks for first batch, uses last frame mask as starting point for subsequent batches. Outputs: masks/ folder with individual mask files, segmentation/ folder with grouped masks by frame.",
-            "fourth_step": "Temporarily ignores SAM2 masks and performs object detection from scratch using YOLO and DeepSort to identify prominent objects for refinement. Processes video_alineado.mp4 frame by frame, applies inverse masks to hide already segmented areas, uses SAHI to improve small object detection, uses DeepSort for tracking IDs. Outputs: track_dic.csv with track_id, frame number, and bounding boxes.",
+            "fourth_step": "Designed to find objects that appear mid-video and were not originally segmented in Step 2. Processes video_alineado.mp4 frame by frame, applies inverse masks to hide already segmented areas so the model focuses only on parts of the video that don't have a mask yet. Uses SAHI for small object detection and DeepSort for tracking newly detected objects. Outputs: track_dic.csv with newly detected objects, discovery frame, and bounding boxes.",
             "fifth_step": "Reviews detected objects from Step 4 and creates high-quality masks using SAM2 interactively for important objects that may have been missed in Step 3. Reads track_dic.csv, shows cropped regions for each object, allows positive/negative clicks for precise masking. Controls: Mouse click (adds points), 'a' key (accept and assign class), '0' key (skip object), 'ESC' key (finish). Outputs: traked/ folder with new masks, mask_list.csv with list of generated masks.",
             "sixth_step": "Similar to Step 3 but uses refined masks from Step 5 to propagate them forward and backward through the video. For each mask in mask_list.csv, uses as starting point, processes video in batches forward from mask frame, then backward from same frame. Outputs: masks/ folder updated with refined object masks.",
             "seventh_step": "Unifies all generated masks into single images per frame where each object class has unique color, creating semantic segmentation. Reads class colors from class_dict.csv, combines all masks from masks/ folder for each frame, paints each mask with its class color. Outputs: semantic/ folder with colored semantic segmentation images.",
-            "eighth_step": "Creates final dataset by combining original images with semantic segmentation masks. Takes first video image (static.png) as background, overlays color masks from semantic/ folder, replaces unsegmented (black) areas with static background content. Outputs: dataset/ folder with final ready-to-use dataset."
+            "eighth_step": "Creates the final dataset by combining tracked objects with a clean background base. This step uses 'static.png' as the background, which is typically a manually edited version of the first stabilized frame containing only the background. The segmented objects are then overlaid onto this backdrop. Outputs: dataset/ folder with final ready-to-use dataset."
         }
         self.step_desc_label.config(text=descriptions.get(option, ""))
 

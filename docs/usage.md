@@ -1,6 +1,6 @@
 # Usage Guide
 
-This guide will walk you through a basic example of how to use ViVa-SAFELAND.
+This guide will walk you through a basic example of how to use ViVa-DataCreator.
 
 First, make sure you have the [necessary dependencies installed](installation.md). Then, you can run the application directly from your terminal
 
@@ -8,7 +8,7 @@ First, make sure you have the [necessary dependencies installed](installation.md
 
 ### Graphical User Interface (GUI)
 
-The primary way to use ViVa-SAFELAND is through its intuitive graphical user interface. Start it with:
+The primary way to use ViVa-DataCreator is through its intuitive graphical user interface. Start it with:
 
 ```bash
 uv run viva-creator
@@ -48,7 +48,7 @@ Device information: GPU: NVIDIA GeForce RTX 3060 (11.6 GB)
 
 The GUI provides:
 
-- **Process Selection Panel:** Choose which step of the 8-step pipeline to execute
+- **Process Selection Panel:** Choose which step of the 8-step pipeline to execute (steps can be revisited or skipped as needed)
 - **Configuration Panel:** Set all necessary parameters including video selection, SAM2 model configuration, and processing parameters
 - **Real-time Monitoring:** View progress and status messages as processes run
 - **Automatic Configuration Saving:** Your settings are saved and restored between sessions
@@ -77,7 +77,7 @@ This configuration is automatically loaded on subsequent runs.
 
 ## Workflow: Detailed Explanation
 
-The dataset creation process is divided into 8 steps that should be executed in order through the GUI.
+The dataset creation process is divided into 8 steps. While they are designed to flow logically, you can skip steps or return to previous ones to refine your results at any time.
 
 ---
 
@@ -142,8 +142,9 @@ The dataset creation process is divided into 8 steps that should be executed in 
     *   **`masks/` folder**: Gets filled with thousands of mask images. Each file is named like `outmask_fr<FRAME_NUM>_id<OBJECT_ID>_cl<CLASS>.png`.
     *   **`segmentation/` folder**: Contains images where all masks for a single frame are grouped into one image. The filename is the frame number (e.g., `1.png`, `2.png`).
 
+<!-- TODO recreate images -->
 <figure markdown="span">
-    <figcaption>Step 3: Left - Objects Selected, Right - Individual Masks (cars)</figcaption>
+    <figcaption>Step 3: Left - Objects Selected, Center - Individual Masks by ID, Right - Combined Individual Masks by Class</figcaption>
     ![GUI](assets/step_2_1.png){ width="300", loading="lazy", align="left"}
     ![GUI](assets/combined_outmask.png){ width="300", loading="lazy", align="left"}
     ![GUI](assets/segmentation_0.png){ width="300", loading="lazy", align="left"}
@@ -151,20 +152,20 @@ The dataset creation process is divided into 8 steps that should be executed in 
 
 ---
 
-### Step 4: Detection and Tracking with YOLO and DeepSort
+### Step 4: Discovering New Objects (YOLO & DeepSort)
 
 *   **Script:** `fourth_step.py`
-*   **Purpose:** This step temporarily ignores the SAM2 masks and performs object detection from scratch using a pre-trained YOLO model and the DeepSort tracker. The goal is to identify the most "prominent" or consistently moving objects, in order to refine their masks in the next step.
+*   **Purpose:** This step is designed to find objects that appear mid-video and were not originally segmented in Step 2. It uses YOLO for detection and DeepSort for tracking to identify new objects of interest.
 *   **How it works:**
     1.  Processes the `video_alineado.mp4` frame by frame.
-    2.  In each frame, it applies an inverse mask (using masks from the `segmentation/` folder) to hide already segmented areas and avoid duplicate detections.
-    3.  Uses SAHI to improve the detection of small objects with YOLO.
-    4.  Uses DeepSort to assign a unique tracking ID to each detected object throughout the video.
+    2.  It applies an **inverse mask** (using existing masks from the `segmentation/` folder) to hide areas already segmented. This allows the model to focus only on parts of the video that don't have a mask yet.
+    3.  Uses SAHI (Slicing Aided Hyper Inference) to improve the detection of small objects with YOLO.
+    4.  Uses DeepSort to assign a unique tracking ID to each *newly* detected object.
 *   **Inputs:**
     *   `video_alineado.mp4`.
-    *   Masks from the `segmentation/` folder.
+    *   Existing masks from the `segmentation/` folder.
 *   **Outputs:**
-    *   **`track_dic.csv` file**: A CSV containing the `track_id` of each detected object and the first frame in which it appeared, along with its bounding box.
+    *   **`track_dic.csv` file**: A list of newly detected objects, the frame where they first appeared, and their initial bounding boxes.
 
 ---
 
@@ -185,7 +186,7 @@ The dataset creation process is divided into 8 steps that should be executed in 
     *   `track_dic.csv`.
     *   Images from the `imgsA/` folder.
 *   **Outputs:**
-    *   **`traked/` folder**: Saves the new, interactively generated masks.
+    *   **`traked/` folder**: Saves the new, interactively generated masks for the objects discovered in Step 4.
     *   **`mask_list.csv` file**: A list of all masks generated in this step, with their frame, class, and ID.
 
 <figure markdown="span">
@@ -207,7 +208,7 @@ The dataset creation process is divided into 8 steps that should be executed in 
     *   `mask_list.csv`.
     *   Images from the `imgsA/` folder.
 *   **Outputs:**
-    *   **`masks/` folder**: Adds and/or overwrites the masks of the refined objects, ensuring complete segmentation throughout the entire video.
+    *   **`masks/` folder**: Adds and/or overwrites the masks of the refined objects. Crucially, this step performs **bidirectional propagation** (forward and backward from the discovery frame) to ensure these mid-video objects are segmented throughout their entire presence.
 
 ---
 
@@ -236,10 +237,10 @@ The dataset creation process is divided into 8 steps that should be executed in 
 ### Step 8: Final Dataset Composition
 
 *   **Script:** `eighth_step.py`
-*   **Purpose:** To create the final dataset by combining the original images with the semantic segmentation masks.
+*   **Purpose:** To create the final dataset by combining the original tracked objects with a clean background. This step uses a static background image (`static.png`) as a base.
 *   **How it works:**
-    1.  Takes the first image of the video (`static.png`) as a background.
-    2.  For each image in the `semantic/` folder, it overlays the color masks onto the background image. The unsegmented (black) areas are replaced with the content from the static image.
+    1.  Uses `static.png` as the background. This image is usually a frame from the stabilized video that has been manually edited to contain only the background (removing any objects of interest).
+    2.  For each image in the `semantic/` folder, it overlays the segmented objects onto this static background.
 *   **Inputs:**
     *   Images from the `semantic/` folder.
     *   A static background image (the first frame of the video).

@@ -24,6 +24,8 @@ Most steps share these common parameters:
 
 ## Step-by-Step Commands
 
+The following commands correspond to the 8-step process found in the GUI. While they follow a logical progression, they can be run independently or in different sequences depending on your specific needs (e.g., returning to a previous step to refine results).
+
 ### Step 1: Frame Extraction
 
 Extracts and aligns video frames to correct camera vibrations.
@@ -76,9 +78,9 @@ uv run python -m vivadatacreator.third_step \
 - `masks/` folder with individual mask files
 - `segmentation/` folder with combined masks per frame
 
-### Step 4: Object Detection and Tracking
+### Step 4: Discovering New Objects
 
-Detects and tracks objects using YOLO and DeepSort.
+Detects and tracks new objects that appear mid-video using YOLO and DeepSort, using inverse masks to focus on unsegmented areas.
 
 ```bash
 uv run python -m vivadatacreator.fourth_step \
@@ -151,9 +153,9 @@ uv run python -m vivadatacreator.seventh_step --root /path/to/video.mp4
 **Outputs:**
 - `semantic/` folder with colored segmentation images
 
-### Step 8: Final Dataset Creation
+### Step 8: Final Dataset Composition
 
-Combines images with semantic masks to create the final dataset.
+Combines tracked objects with a manually prepared background base (`static.png`) to create the final dataset.
 
 ```bash
 uv run python -m vivadatacreator.eighth_step --root /path/to/video.mp4
