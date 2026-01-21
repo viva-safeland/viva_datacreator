@@ -33,6 +33,7 @@ This tool focuses on generating semantic segmentation datasets through object tr
 -   **Object Tracking Integration:** Utilize YOLO and DeepSort for tracking objects of interest across video frames.
 -   **Batch Processing:** Efficiently handle large videos through configurable batch processing.
 -   **Customizable Classes:** Define and assign custom object classes with unique colors.
+-   **Data Augmentation:** Generate augmented datasets (random crops, rotations) to increase dataset size and variability.
 -   **Safety-Focused:** Designed for safe and reliable dataset generation without hardware risks.
 
 ## Documentation

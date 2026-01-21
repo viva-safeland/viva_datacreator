@@ -254,3 +254,32 @@ The dataset creation process is divided into 8 steps. While they are designed to
     ![GUI](assets/reduced_0_dataset.png){ width="300", loading="lazy", align="left"}
 </figure>
 
+
+---
+
+## Data Augmentation
+
+In addition to the 8-step pipeline, ViVa-DataCreator includes a powerful Data Augmentation tool. This tool allows you to significantly increase the size and variability of your dataset by generating new training examples from your processed videos.
+
+It works by taking random crops from your existing pairs of images and masks, rotating them, and resizing them to a target resolution.
+
+### Using the Data Augmentation Tab
+
+1.  Switch to the **Data Augmentation** tab in the GUI.
+2.  **Root Directory:** Select the folder that contains your processed video folders (e.g., if you have `videos/video1`, `videos/video2`, select `videos/`).
+    *   *Note:* If you have a video selected in the "Video Pipeline" tab, these paths will be automatically set to that video's parent directory.
+3.  **Output Directory:** Choose where to save the augmented dataset. By default, it creates a `dataset_augmented` folder.
+4.  **Parameters:** Configure the augmentation settings:
+    *   **Num Images:** The total number of new image pairs to generate.
+    *   **Final Width/Height:** The resolution of the output images.
+    *   **Min Short Side:** Controls how much "zoom" is allowed (smaller values allow tighter crops).
+    *   **Rotation:** Set the range of random rotation (e.g., 0-360 degrees).
+5.  **Generate:** Click "Generate Augmented Dataset" to start the process.
+
+**Outputs:**
+*   A folder containing:
+    *   **`imgs/`**: The augmented images.
+    *   **`segmented/`**: The corresponding augmented masks.
+
+![Data Augmentation GUI](assets/data_augmentation_gui.png "Data Augmentation Tab")
+

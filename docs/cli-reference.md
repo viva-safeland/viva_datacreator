@@ -162,7 +162,31 @@ uv run python -m vivadatacreator.eighth_step --root /path/to/video.mp4
 ```
 
 **Outputs:**
-- `dataset/` folder with final dataset images
+-   `dataset/` folder with final dataset images
+
+### Data Augmentation
+
+Generates an augmented dataset from processed video folders by applying random crops and rotations.
+
+```bash
+uv run python -m vivadatacreator.data_augmentation \
+  --root /path/to/videos_root \
+  --output /path/to/output_dir \
+  --num-images 1000
+```
+
+**Parameters:**
+- `--root PATH`: Root directory containing processed video folders (required)
+- `--output PATH`: Directory to save the augmented dataset (required)
+- `--width INT`: Target width of generated images (default: 1056)
+- `--height INT`: Target height of generated images (default: 704)
+- `--num-images INT`: Total number of images to generate (default: 1000)
+- `--min-size INT`: Minimum crop size (default: 300)
+- `--min-rot FLOAT`: Minimum rotation angle (default: 0)
+- `--max-rot FLOAT`: Maximum rotation angle (default: 360)
+
+**Outputs:**
+- A folder containing `imgs/` (augmented images) and `segmented/` (augmented masks)
 
 ## Workflow Combinations
 
