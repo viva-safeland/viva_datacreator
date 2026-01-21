@@ -277,9 +277,14 @@ It works by taking random crops from your existing pairs of images and masks, ro
 5.  **Generate:** Click "Generate Augmented Dataset" to start the process.
 
 **Outputs:**
-*   A folder containing:
-    *   **`imgs/`**: The augmented images.
-    *   **`segmented/`**: The corresponding augmented masks.
 
-![Data Augmentation GUI](assets/data_augmentation_gui.png "Data Augmentation Tab")
+A folder containing:
+
+    *   The augmented images.
+    *   The corresponding augmented masks.
+
+<figure markdown="span">
+    <figcaption>Data Augmentation Tab</figcaption>
+    ![GUI](assets/data_augmentation_gui.png){ width="800", loading="lazy"}
+</figure>
 
