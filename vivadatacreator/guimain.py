@@ -262,8 +262,8 @@ class VideoApp:
         self.root = root
         self.root.title("ViVa-DataCreator")
         # --- CHANGE: Reduced window size for a more compact layout ---
-        self.root.geometry("1024x620")
-        self.root.minsize(1024, 620)
+        self.root.geometry("1024x680")
+        self.root.minsize(1024, 680)
 
         # Configure fonts
         self.FONT = ("Arial", 10)
@@ -345,42 +345,43 @@ class VideoApp:
             return "CPU: Torch is not available"
 
     def create_widgets(self):
-        # --- CHANGE: Main layout restructured for compactness ---
+        # --- CHANGE: Main layout restructured to use Tabs ---
         
-        # 1. Status line at the very bottom
+        # 1. Status line at the very bottom (common for both tabs)
         status_line_frame = ttk.Frame(self.root)
         status_line_frame.pack(side=tk.BOTTOM, fill=tk.X, padx=10, pady=(5, 10))
 
-        # 2. Main container for the two-column layout
-        main_container = ttk.Frame(self.root)
-        main_container.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-        main_container.rowconfigure(0, weight=1)
-        main_container.columnconfigure(0, minsize=220) # Left column for process selection
-        main_container.columnconfigure(1, weight=1)    # Right column for everything else
+        # 2. Main container (Notebook)
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 
-        # 3. Create and place the two main panes
+        # Tab 1: Video Pipeline
+        self.pipeline_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.pipeline_tab, text=" Video Pipeline ")
+
+        # Tab 2: Data Augmentation
+        self.augmentation_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.augmentation_tab, text=" Data Augmentation ")
+
+        # --- Configure Tab 1 (Video Pipeline) ---
+        self.pipeline_tab.rowconfigure(0, weight=1)
+        self.pipeline_tab.columnconfigure(0, minsize=220) # Left column
+        self.pipeline_tab.columnconfigure(1, weight=1)    # Right column
+
         # Left Panel Container
-        left_panel = ttk.Frame(main_container)
-        left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        left_panel = ttk.Frame(self.pipeline_tab)
+        left_panel.grid(row=0, column=0, sticky="nsew", padx=(0, 10), pady=10)
 
         # Logo
         try:
             logo_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'docs', 'assets', 'logo.png')
             if os.path.exists(logo_path):
-                # Open the image using PIL
                 pil_image = Image.open(logo_path)
-                
-                # Calculate new height to maintain aspect ratio with width 200
                 target_width = 200
                 width_percent = (target_width / float(pil_image.size[0]))
                 target_height = int((float(pil_image.size[1]) * float(width_percent)))
-                
-                # Resize image
                 resized_image = pil_image.resize((target_width, target_height), Image.Resampling.LANCZOS)
-                
-                # Convert to PhotoImage
                 self.logo_img = ImageTk.PhotoImage(resized_image)
-                
                 logo_label = ttk.Label(left_panel, image=self.logo_img)
                 logo_label.pack(anchor='center', pady=(0, 10))
         except Exception as e:
@@ -394,13 +395,15 @@ class VideoApp:
         doc_link.pack(anchor='center', pady=(0, 10))
         doc_link.bind("<Button-1>", lambda e: self.open_documentation("https://viva-safeland.github.io/viva_datacreator"))
 
-        controls_pane = ttk.Frame(main_container)
-        controls_pane.grid(row=0, column=1, sticky="nsew")
+        controls_pane = ttk.Frame(self.pipeline_tab)
+        controls_pane.grid(row=0, column=1, sticky="nsew", pady=10)
 
-        # 4. Populate the panes
         self.create_process_selection_panel(process_pane)
         self.create_controls_panel(controls_pane)
         
+        # --- Configure Tab 2 (Data Augmentation) ---
+        self.create_augmentation_tab()
+
         # 5. Populate the status line
         status_label_title = ttk.Label(status_line_frame, text="LAST MESSAGE:", font=self.FONT_BOLD)
         status_label_title.pack(side=tk.LEFT, padx=(5, 5))
@@ -721,6 +724,192 @@ class VideoApp:
             self.status_labels["label_0"].configure(text="Status: Error")
             self.status_line_label.config(text=error_msg)
             messagebox.showerror("Error", error_msg)
+
+    def create_augmentation_tab(self):
+        """Creates the content for the Data Augmentation tab."""
+        tab = self.augmentation_tab
+        tab.columnconfigure(0, weight=1)
+        
+        # Main container
+        main_frame = ttk.Frame(tab)
+        main_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+        main_frame.columnconfigure(0, weight=1)
+        
+        # --- 1. Directories Section ---
+        dirs_frame = ttk.Labelframe(main_frame, text="Directories")
+        dirs_frame.pack(fill=tk.X, pady=(0, 20))
+        dirs_frame.columnconfigure(1, weight=1)
+
+        # Root Directory
+        ttk.Label(dirs_frame, text="Root Directory:").grid(row=0, column=0, sticky='w', padx=5, pady=5)
+        self.aug_root_var = tk.StringVar()
+        ttk.Entry(dirs_frame, textvariable=self.aug_root_var).grid(row=0, column=1, sticky='ew', padx=5, pady=5)
+        ttk.Button(dirs_frame, text="...", command=lambda: self.browse_directory(self.aug_root_var), width=3).grid(row=0, column=2, padx=5, pady=5)
+
+        # Output Directory
+        ttk.Label(dirs_frame, text="Output Directory:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
+        self.aug_output_var = tk.StringVar()
+        ttk.Entry(dirs_frame, textvariable=self.aug_output_var).grid(row=1, column=1, sticky='ew', padx=5, pady=5)
+        ttk.Button(dirs_frame, text="...", command=lambda: self.browse_directory(self.aug_output_var), width=3).grid(row=1, column=2, padx=5, pady=5)
+
+        # --- 2. Parameters & Actions Layout ---
+        # Split into two columns: Left for Parameters, Right for Actions (Button)
+        content_frame = ttk.Frame(main_frame)
+        content_frame.pack(fill=tk.BOTH, expand=True, pady=(0, 20))
+        content_frame.columnconfigure(0, weight=1) # Parameters
+        content_frame.columnconfigure(1, weight=1) # Actions (Button centered in right panel)
+
+        # Parameters Frame (Left)
+        params_frame = ttk.Labelframe(content_frame, text="Parameters")
+        params_frame.grid(row=0, column=0, sticky="nsew", padx=(0, 10))
+        
+        # Grid layout for parameters
+        params = [
+            ("Num Images:", "aug_num_imgs_var", "1000", "Total number of augmented images to generate from the entire dataset."),
+            ("Final Width:", "aug_width_var", "1056", "Target width of the generated images."),
+            ("Final Height:", "aug_height_var", "704", "Target height of the generated images."),
+            ("Min Short Side:", "aug_min_side_var", "300", "Minimum size of the shortest side when randomly cropping."),
+            ("Min Rotation:", "aug_min_rot_var", "0", "Minimum rotation angle in degrees."),
+            ("Max Rotation:", "aug_max_rot_var", "360", "Maximum rotation angle in degrees."),
+        ]
+
+        for i, (label, var_name, default, tooltip_text) in enumerate(params):
+            ttk.Label(params_frame, text=label).grid(row=i, column=0, sticky='w', padx=10, pady=5)
+            var = tk.StringVar(value=default)
+            setattr(self, var_name, var)
+            entry = ttk.Entry(params_frame, textvariable=var, width=15)
+            entry.grid(row=i, column=1, sticky='w', padx=10, pady=5)
+            
+            # Use Tooltip class for floating descriptions
+            Tooltip(entry, tooltip_text)
+
+        # Actions Frame (Right)
+        actions_frame = ttk.Frame(content_frame)
+        actions_frame.grid(row=0, column=1, sticky="nsew")
+        actions_frame.columnconfigure(0, weight=1)
+        actions_frame.rowconfigure(0, weight=1)
+
+        # Center the button in the right panel
+        self.aug_execute_btn = ttk.Button(actions_frame, text="Generate Augmented Dataset", command=self.execute_augmentation)
+        self.aug_execute_btn.place(relx=0.5, rely=0.5, anchor=tk.CENTER, relwidth=0.8, height=50)
+
+        # Bind Tab Change to update defaults
+        self.notebook.bind("<<NotebookTabChanged>>", self.on_tab_changed)
+
+    def on_tab_changed(self, event):
+        """Updates defaults when switching to Data Augmentation tab."""
+        selected_tab = self.notebook.select()
+        tab_text = self.notebook.tab(selected_tab, "text")
+        
+        if "Data Augmentation" in tab_text:
+            self.update_aug_defaults()
+
+    def update_aug_defaults(self):
+        """Sets default paths based on the selected video."""
+        if self.video_path and os.path.exists(self.video_path):
+            # Assuming video path is like: .../videos/subfolder/video.mp4
+            # We want root to be: .../videos/
+            try:
+                video_dir = os.path.dirname(self.video_path) # .../videos/subfolder
+                root_dir = os.path.dirname(video_dir)        # .../videos
+                
+                # Update only if empty or user hasn't manually set a different valid path
+                current_root = self.aug_root_var.get()
+                if not current_root or not os.path.exists(current_root):
+                     self.aug_root_var.set(root_dir)
+                     
+                     # Default output to dataset_augmented
+                     default_output = os.path.join(root_dir, "dataset_augmented")
+                     self.aug_output_var.set(default_output)
+                     
+                     print(f"Auto-set Augmentation Defaults:\n  Root: {root_dir}\n  Output: {default_output}")
+            except Exception as e:
+                print(f"Error auto-setting defaults: {e}")
+
+    def browse_directory(self, var):
+        """Generic directory browser."""
+        initial = var.get() if var.get() and os.path.exists(var.get()) else None
+        directory = filedialog.askdirectory(initialdir=initial)
+        if directory:
+            var.set(directory)
+
+    def execute_augmentation(self):
+        """Executes the data augmentation process."""
+        root_path = self.aug_root_var.get()
+        output_path = self.aug_output_var.get()
+
+        if not root_path or not os.path.isdir(root_path):
+            messagebox.showerror("Error", "Please select a valid Root Directory.")
+            return
+        if not output_path:
+            messagebox.showerror("Error", "Please select an Output Directory.")
+            return
+        
+        if self.processing_thread and self.processing_thread.is_alive():
+            messagebox.showwarning("Warning", "A process is already running.")
+            return
+
+        self.processing_thread = threading.Thread(target=self.run_augmentation_process, daemon=True)
+        self.processing_thread.start()
+
+    def run_augmentation_process(self):
+        try:
+            print("Starting Data Augmentation...\n")
+            self.status_labels["label_0"].configure(text="Status: Processing Augmentation...")
+            self.aug_execute_btn.configure(state=tk.DISABLED)
+
+            cmd = [
+                "uv", "run", "python", "-m", "vivadatacreator.data_augmentation",
+                "--root", self.aug_root_var.get(),
+                "--output", self.aug_output_var.get(),
+                "--width", self.aug_width_var.get(),
+                "--height", self.aug_height_var.get(),
+                "--num-images", self.aug_num_imgs_var.get(),
+                "--min-size", self.aug_min_side_var.get(),
+                "--min-rot", self.aug_min_rot_var.get(),
+                "--max-rot", self.aug_max_rot_var.get(),
+            ]
+
+            print(f"Executing: {' '.join(cmd)}\n")
+
+            process = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                bufsize=1,
+                encoding='utf-8',
+                errors='replace'
+            )
+
+            for line in process.stdout:
+                line = line.strip()
+                if line:
+                    print(line)
+
+            process.wait()
+
+            if process.returncode == 0:
+                final_msg = "Data Augmentation completed successfully!"
+                print(f"{final_msg}\n")
+                self.status_labels["label_0"].configure(text="Status: Completed")
+                # messagebox.showinfo("Success", final_msg) # Popup removed as requested
+            else:
+                final_msg = f"Data Augmentation failed with code: {process.returncode}"
+                print(f"{final_msg}\n")
+                self.status_labels["label_0"].configure(text="Status: Error")
+                messagebox.showerror("Error", final_msg)
+            
+            self.status_line_label.config(text=final_msg)
+
+        except Exception as e:
+            error_msg = f"Error executing augmentation: {str(e)}"
+            print(error_msg)
+            self.status_labels["label_0"].configure(text="Status: Error")
+            self.status_line_label.config(text=error_msg)
+            messagebox.showerror("Error", error_msg)
+        finally:
+             self.aug_execute_btn.configure(state=tk.NORMAL)
 
     def on_closing(self):
         # Update config_data with current values before saving

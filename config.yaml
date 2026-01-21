@@ -9,6 +9,6 @@ n_imgs: 200
 n_obj: 20
 overlap_sahi: 0.2
 ram_budget: 0.6
-root: /home/juls/projects/ViVa-DataCreator_Juls/videodataset/video.mp4
+root: /media/juls/Storage/Videos_Dron/mi_archivo/videos/exiatorio/exiatorio.MP4
 sam2_chkpt: /home/juls/projects/viva_datacreator/checkpoints/sam2.1_hiera_large.pt
 yolo_weights: yolo11x.pt
