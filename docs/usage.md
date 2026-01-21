@@ -280,8 +280,8 @@ It works by taking random crops from your existing pairs of images and masks, ro
 
 A folder containing:
 
-    *   The augmented images.
-    *   The corresponding augmented masks.
+*   The augmented images.
+*   The corresponding augmented masks.
 
 <figure markdown="span">
     <figcaption>Data Augmentation Tab</figcaption>
